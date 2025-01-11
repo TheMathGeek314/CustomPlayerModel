@@ -13,7 +13,7 @@ namespace CustomPlayerModel {
         private customPropertyType customProperty = customPropertyType.None;
         public float nonSwimHeight;
 
-        static AnimationStateController instance;
+        public static AnimationStateController instance;
         static string[] implementedStates = { };
 
         void Start() {

@@ -69,7 +69,7 @@ namespace CustomPlayerModel {
                         return;
                     }
                 }
-                spawnModel(gs.chosenModel);
+                spawnModel(gs.chosenModel);//todo handle null
             }
         }
 
@@ -82,8 +82,6 @@ namespace CustomPlayerModel {
             foreach(string file in filenames) {
                 int startIndex = file.IndexOf("CustomPlayerModel") + folderLength;
                 string name = file.Substring(startIndex, file.Length - startIndex - extensionLength);
-                //Log($"startIndex = {startIndex}, file.Length = {file.Length}");
-                Log($"\tTrimmed \"{file}\" to \"{name}\"");
                 ModelList.Add(name, file);
                 modelNames.Add(name);
             }
@@ -91,6 +89,9 @@ namespace CustomPlayerModel {
         }
 
         private void spawnModel(string bundleName) {
+            if(AnimationStateController.instance != null && AnimationStateController.instance.parent != null) {
+                GameObject.Destroy(AnimationStateController.instance.parent.gameObject);
+            }
             var model = findFbx(bundleName);
             if(model == null)
                 return;
@@ -98,7 +99,7 @@ namespace CustomPlayerModel {
             float rotationFlip = HeroController.instance.cState.facingRight ? 90 : 270;
             GameObject modelGO = GameObject.Instantiate(model, heroBounds.center - new Vector3(0, heroBounds.extents.y, 0), Quaternion.Euler(0, rotationFlip, 0), HeroController.instance.transform) as GameObject;
             modelGO.transform.localScale = modelGO.transform.localScale.MultiplyElements(HeroController.instance.gameObject.transform.localScale).MultiplyElements(new Vector3(0.1f, 1, 1));
-            GameObject armature = findArmature(modelGO);
+            GameObject armature = findArmature(modelGO);//todo handle null
             AnimationStateController asc = armature.AddComponent<AnimationStateController>();
             asc.parent = modelGO;
             asc.nonSwimHeight = modelGO.transform.localPosition.y;
@@ -197,14 +198,29 @@ namespace CustomPlayerModel {
                         name: "Enabled",
                         description: "",
                         values: new string[] { "On", "Off" },
-                        applySetting: index => { gs.isEnabled = index == 0; },
+                        applySetting: index => {
+                            gs.isEnabled = index == 0;
+                            if(GameManager.instance.IsGameplayScene()) {//is GameManager the best check here?
+                                if(gs.isEnabled) {
+                                    spawnModel(gs.chosenModel);
+                                }
+                                else {
+                                    HeroController.instance.gameObject.GetComponent<MeshRenderer>().enabled = true;
+                                }
+                            }
+                        },
                         loadSetting: () => gs.isEnabled ? 0 : 1
                     ),
                     new HorizontalOption(
                         name: "Model",
                         description: "",
                         values: modelNames.ToArray(),
-                        applySetting: index => { gs.chosenModel = modelNames[index]; },
+                        applySetting: index => {
+                            gs.chosenModel = modelNames[index];
+                            if(gs.isEnabled && GameManager.instance.IsGameplayScene()) {//ditto
+                                spawnModel(gs.chosenModel);
+                            }
+                        },
                         loadSetting: () => modelNames.IndexOf(gs.chosenModel)
                     )
                 }
