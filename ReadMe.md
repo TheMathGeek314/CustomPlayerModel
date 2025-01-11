@@ -31,46 +31,46 @@ In the top corner, select **Export as VRM**. The default settigns should be fine
 ### 3. Import your VRM into Blender and export as an FBX
 In Blender, make sure you have the VRM extension installed (Edit > Preferences > Add-ons > Install...).
 You can then clear the scene (hotkeys A+X), import your VRM model (File > Import > VRM) and export it as an FBX (File > Export > FBX).
-![Import VRM](Tutorials/Blender_import.png) ![Export FBX](Tutorials/Blender_export.png)
+![Import VRM](Tutorial/Blender_import.png) ![Export FBX](Tutorial/Blender_export.png)
 
 
 ### 4. Create a Unity project with UniVRM
 Create a new project in version 2020.2.2. This *might* work in other versions, but it has caused me problems, so I can't promise others will work properly.
 Drag the UniVRM package into the Assets window, click **Import** on the popup, let it think for a few seconds, and accept any further popups.
 You should see this in your Assets window after.
-![UniVRM](Tutorials/UniVRM.png)
+![UniVRM](Tutorial/UniVRM.png)
 
 
 ### 5. Drag your FBX model into Unity
 Take the FBX you exported from Blender and drag it into Unity's Assets window. It should appear with a collapsible list.
 Within this list, make sure the armature/skeleton of your model has the name "Armature" or the mod won't be able to find it (this should be default).
 It's fine if all of the materials you see are default gray, we'll fix that in a moment.
-![Imported FBX](Tutorials/Unity_grays.png)
+![Imported FBX](Tutorial/Unity_grays.png)
 
 
 ### 6. Drag your VRM model into Unity
 Take the VRM you exported from VRoid and drag it into Unity's Assets window as well. This should create a bunch of folders with things like textures, meshes, and blendshapes.
 At this point I recommend using the slider in the corner to see the filenames better.
-![VRM folders](Tutorials/Unity_folders.png)
+![VRM folders](Tutorial/Unity_folders.png)
 
 
 ### 7. Convert each material's shader to Unlit
 When you click on any file in the VRM's materials folder, you will see a **Shader** at the top and a **Rendering Type** just below it.
 Because Hollow Knight is a 2D sprite-based game, it doesn't use a full lighting system, so in order for your model's textures to display properly, they will need to use an Unlit shader.
 To do this, take note of the Rendering Type (usually either Cutout or Transparent), click the Shader dropdown, select Unlit, and choose the option that matches the rendering type.
-![Shader and Rendering Type](Tutorials/VRM_shaders.png) ![Unlit shader](Tutorials/Shaders_unlit.png) ![Cutout shader](Tutorials/Cutout_shader.png)
+![Shader and Rendering Type](Tutorial/VRM_shaders.png) ![Unlit shader](Tutorial/Shaders_unlit.png) ![Cutout shader](Tutorial/Cutout_shader.png)
 
 
 ### 8. Apply the VRM materials to your FBX model
 In the Assets window, click on the FBX model. In the project window to the left (assuming that's your layout), select the Materials folder.
 Drag each material from the Assets window onto the corresponding field on the right in the Inspector window, then click **Apply**.
-![Map materials](Tutorials/Material_mapping.png)
+![Map materials](Tutorial/Material_mapping.png)
 
 
 ### 9. Add this build script
 In the Assets window, add a script by right-clicking > Create > C# Script. In a text editor, replace everything in the script with the code below, but replace MODELNAME with whatever you want.
 This is the name you will see in Hollow Knight. If you're not on a windows machine, you may also need to edit the BuildTarget to StandaloneLinux or StandaloneOSX.
-![Create script](Tutorials/Create_script.png)
+![Create script](Tutorial/Create_script.png)
 ```
 using UnityEngine;
 using UnityEditor;
@@ -93,7 +93,7 @@ public class ExportAssetBundles {
 When you save the script and return to Unity, it will compile the script and grant you access to a new build option.
 Select your FBX model in the Assets window, and at the top, click Assets > Build AssetBundle.
 This will create a .unity3d file inside your Assets folder (it might not display immediately).
-![Build AssetBundle](Tutorials/Build_AssetBundle.png)
+![Build AssetBundle](Tutorial/Build_AssetBundle.png)
 
 
 ### 11. Move the bundle to your mods folder
