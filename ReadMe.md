@@ -76,7 +76,7 @@ Drag each material from the Assets window onto the corresponding field on the ri
 
 
 ### 9. Add this build script
-In the Assets window, add a script by right-clicking > Create > C# Script. In a text editor, replace everything in the script with the code below, but replace MODELNAME with whatever you want.
+In the Assets window, add a script by right-clicking > Create > C# Script and name it ExportAssetBundle. In a text editor, replace everything in the script with the code below, but replace MODELNAME with whatever you want.
 This is the name you will see in Hollow Knight. If you're not on a windows machine, you may also need to edit the BuildTarget to StandaloneLinux or StandaloneOSX.
 
 ![Create script](Tutorial/Create_script.png)
