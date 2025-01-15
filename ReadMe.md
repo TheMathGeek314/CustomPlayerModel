@@ -1,11 +1,14 @@
 # CustomPlayerModel
 
-This mod allows you to to replace your knight sprite with a 3D model
+This mod allows you to to replace your knight sprite with a 3D model.
+
+It is currently slightly incomplete and may be updated in the future.
 
 ## How to add your own models
 This tutorial will walk you through every step of converting a Vroid model into a usable format for the mod.
 If you already have a compatible model, you may be able to skip some steps.
 This will take a bit of work, but everything here is free and safe.
+To see images, view this page on [GitHub](https://github.com/TheMathGeek314/CustomPlayerModel)
 
 
 You will need:
@@ -76,7 +79,7 @@ Drag each material from the Assets window onto the corresponding field on the ri
 
 
 ### 9. Add this build script
-In the Assets window, add a script by right-clicking > Create > C# Script. In a text editor, replace everything in the script with the code below, but replace MODELNAME with whatever you want.
+In the Assets window, add a script by right-clicking > Create > C# Script and name it ExportAssetBundle. In a text editor, replace everything in the script with the code below, but replace MODELNAME with whatever you want.
 This is the name you will see in Hollow Knight. If you're not on a windows machine, you may also need to edit the BuildTarget to StandaloneLinux or StandaloneOSX.
 
 ![Create script](Tutorial/Create_script.png)
