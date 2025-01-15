@@ -4,13 +4,10 @@ using MonoMod.Cil;
 using MonoMod.RuntimeDetour;
 using MonoMod.Utils;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using System.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.Networking;
 using UObject = UnityEngine.Object;
 using Satchel.BetterMenus;
 using static Satchel.IoUtils;
@@ -18,7 +15,7 @@ using static Satchel.IoUtils;
 namespace CustomPlayerModel {
     public class CustomPlayerModel: Mod, ICustomMenuMod, IGlobalSettings<GlobalSettings> {
         new public string GetName() => "CustomPlayerModel";
-        public override string GetVersion() => "1.0.0.0";
+        public override string GetVersion() => "0.8.0.0";
 
         private Menu MenuRef;
         public static GlobalSettings gs { get; set; } = new();
@@ -39,23 +36,9 @@ namespace CustomPlayerModel {
             On.HutongGames.PlayMaker.Actions.SetMeshRenderer.OnEnter += hideKnight3;
             new ILHook(typeof(HeroController).GetMethod("DieFromHazard", BindingFlags.NonPublic | BindingFlags.Instance).GetStateMachineTarget(), despawnHazardKnight);
 
-            //ModHooks.HeroUpdateHook += KeyInput;
-
             ControllerBundle = AssetBundle.LoadFromStream(Assembly.GetExecutingAssembly().GetManifestResourceStream("CustomPlayerModel.Resources.controller.unity3d"));
             registerModels();
         }
-
-        /*private void KeyInput() {
-            if(Input.GetKeyDown(KeyCode.O)) {
-                //spawnModel();
-                string path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "/Models";
-                string[] files = Directory.GetFiles(path);
-                Log("Logging files in the Models folder:");
-                foreach(string file in files) {
-                    Log($"\t\t\"{file}\"");
-                }
-            }
-        }*/
 
         private void createModel(On.HeroController.orig_Awake orig, HeroController self) {
             orig(self);
@@ -69,7 +52,7 @@ namespace CustomPlayerModel {
                         return;
                     }
                 }
-                spawnModel(gs.chosenModel);//todo handle null
+                spawnModel(gs.chosenModel);
             }
         }
 
@@ -90,7 +73,7 @@ namespace CustomPlayerModel {
 
         private void spawnModel(string bundleName) {
             if(AnimationStateController.instance != null && AnimationStateController.instance.parent != null) {
-                GameObject.Destroy(AnimationStateController.instance.parent.gameObject);
+                GameObject.Destroy(AnimationStateController.instance.parent);
             }
             var model = findFbx(bundleName);
             if(model == null)
@@ -99,7 +82,9 @@ namespace CustomPlayerModel {
             float rotationFlip = HeroController.instance.cState.facingRight ? 90 : 270;
             GameObject modelGO = GameObject.Instantiate(model, heroBounds.center - new Vector3(0, heroBounds.extents.y, 0), Quaternion.Euler(0, rotationFlip, 0), HeroController.instance.transform) as GameObject;
             modelGO.transform.localScale = modelGO.transform.localScale.MultiplyElements(HeroController.instance.gameObject.transform.localScale).MultiplyElements(new Vector3(0.1f, 1, 1));
-            GameObject armature = findArmature(modelGO);//todo handle null
+            GameObject armature = findArmature(modelGO);
+            if(armature == null)
+                return;
             AnimationStateController asc = armature.AddComponent<AnimationStateController>();
             asc.parent = modelGO;
             asc.nonSwimHeight = modelGO.transform.localPosition.y;
@@ -148,7 +133,6 @@ namespace CustomPlayerModel {
                 bundle = StoredBundles[bundleName];
             }
             else {
-                //bundle = AssetBundle.LoadFromFile(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + $"/Models/{bundleName}.unity3d");
                 bundle = AssetBundle.LoadFromFile(ModelList[bundleName]);
                 StoredBundles.Add(bundleName, bundle);
             }
@@ -206,6 +190,9 @@ namespace CustomPlayerModel {
                                 }
                                 else {
                                     HeroController.instance.gameObject.GetComponent<MeshRenderer>().enabled = true;
+                                    if(AnimationStateController.instance != null && AnimationStateController.instance.parent != null) {
+                                        GameObject.Destroy(AnimationStateController.instance.parent);
+                                    }
                                 }
                             }
                         },

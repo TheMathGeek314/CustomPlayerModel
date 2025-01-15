@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using UnityEngine;
 
 namespace CustomPlayerModel {
@@ -36,7 +32,7 @@ namespace CustomPlayerModel {
             if(newState == instance.currentState)
                 return;
             if(!implementedStates.Contains(newState)) {
-                Modding.Logger.Log($"[CustomPlayerModel] - Unhandled Clip \"{newState}\"");
+                //Modding.Logger.Log($"[CustomPlayerModel] - Unhandled Clip \"{newState}\"");
                 return;
             }
             updateCustomProperty(newState);
