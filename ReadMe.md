@@ -17,8 +17,8 @@ You will need:
 - [Unity](https://unity.com/releases/editor/whats-new/2020.2.2) version 2020.2.2
 	- Other versions might work, but I can't promise anything
 - The [Blender VRM](https://extensions.blender.org/add-ons/vrm/) extension
-- The [UniVRM](https://github.com/vrm-c/UniVRM/releases) package
-	- This mod was built using some older versions of this extension and package, so let me know if anything doesn't work
+- The [UniVRM](https://github.com/vrm-c/UniVRM/releases/tag/v0.99.4) package, version 0.99.4
+	- Since Hollow Knight and this mod run on an older version of Unity, newer versions of this package won't work
 
 
 ### 1. Design your model in VRoid
