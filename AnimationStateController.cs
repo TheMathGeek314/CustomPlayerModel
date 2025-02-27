@@ -21,8 +21,6 @@ namespace CustomPlayerModel {
             }
         }
 
-        void Update() {}
-
         public static void updateState(string newState) {
             if(instance == null)
                 return;

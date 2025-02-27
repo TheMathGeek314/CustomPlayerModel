@@ -15,7 +15,7 @@ using static Satchel.IoUtils;
 namespace CustomPlayerModel {
     public class CustomPlayerModel: Mod, ICustomMenuMod, IGlobalSettings<GlobalSettings> {
         new public string GetName() => "CustomPlayerModel";
-        public override string GetVersion() => "0.8.0.0";
+        public override string GetVersion() => "0.8.0.1";
 
         private Menu MenuRef;
         public static GlobalSettings gs { get; set; } = new();
@@ -24,6 +24,8 @@ namespace CustomPlayerModel {
         public static AssetBundle ControllerBundle;
         public static Dictionary<string, string> ModelList = new();
         private static List<string> modelNames = new();
+
+        private static FieldInfo hcRenderer;
 
         public override void Initialize(Dictionary<string, Dictionary<string, GameObject>> preloadedObjects) {
             On.HeroController.Awake += createModel;
@@ -38,6 +40,8 @@ namespace CustomPlayerModel {
 
             ControllerBundle = AssetBundle.LoadFromStream(Assembly.GetExecutingAssembly().GetManifestResourceStream("CustomPlayerModel.Resources.controller.unity3d"));
             registerModels();
+
+            hcRenderer = typeof(HeroController).GetField("renderer", BindingFlags.NonPublic | BindingFlags.Instance);
         }
 
         private void createModel(On.HeroController.orig_Awake orig, HeroController self) {
@@ -149,7 +153,7 @@ namespace CustomPlayerModel {
         private void hideKnight1(On.HeroController.orig_EnableRenderer orig, HeroController self) {
             orig(self);
             if(gs.isEnabled) {
-                ((MeshRenderer)typeof(HeroController).GetField("renderer", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(self)).enabled = false;
+                ((MeshRenderer)hcRenderer.GetValue(self)).enabled = false;
             }
         }
 
